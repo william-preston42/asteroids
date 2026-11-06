@@ -7,12 +7,32 @@ from logger import log_event
 class Asteroid(CircleShape):
     def __init__(self, x: float, y: float, radius: float) -> None:
         super().__init__(x, y, radius)
+        self.rotation = 0
+        self.rotation_speed = random.uniform(-20, 20)
+        self.sides = 10
+        self.modify = []
 
-    def draw(self, screen) -> None:
-        pygame.draw.circle(screen, "white", self.position, self.radius, LINE_WIDTH)
+        for i in range(0, self.sides):
+            self.modify.append(random.uniform(-10,2))
+
+    def polygon(self) -> list[pygame.Vector2]:
+        vectors = []
+        angle = 360 / self.sides
+        for i in range(0, self.sides):
+            forward = pygame.Vector2(0, 1).rotate(self.rotation + (angle * i))
+            vectors.append(self.position + forward * (self.radius + self.modify[i]))
+        return vectors
+           
+    def rotate(self, dt: float) -> None:
+        self.rotation += self.rotation_speed * dt
+
+    def draw(self, screen: pygame.Surface) -> None:
+        pygame.draw.polygon(screen, "white", self.polygon(), LINE_WIDTH)
 
     def update(self, dt: float) -> None:
         self.position += self.velocity * dt
+        self.rotate(dt)
+
 
     def split(self) -> None:
         self.kill()
