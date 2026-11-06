@@ -18,8 +18,21 @@ class Player(CircleShape):
         d = self.position - forward * self.radius + right
         return [a, b, c, d]
 
+    def triangle_fire(self) -> list[pygame.Vector2]:
+        forward = pygame.Vector2(0, 1).rotate(self.rotation)
+        right = pygame.Vector2(0, 1).rotate(self.rotation + 90) * self.radius / 1.5
+        a = self.position - (forward / 2) * self.radius
+        b = self.position - (forward / 1.5) * self.radius - (right / 2.6)
+        c = self.position - (forward * 1.5) * self.radius
+        d = self.position - (forward / 1.5) * self.radius + (right / 2.6)
+        return [a, b, c, d]
+
     def draw(self, screen: pygame.Surface) -> None:
         pygame.draw.polygon(screen, "white", self.triangle(), LINE_WIDTH)
+
+    def draw_fire(self, screen: pygame.Surface) -> None:
+        if pygame.key.get_pressed()[pygame.K_w]:
+            pygame.draw.polygon(screen, "white", self.triangle_fire(), LINE_WIDTH)
 
     def rotate(self, dt: float) -> None:
         self.rotation += PLAYER_TURN_SPEED * dt
