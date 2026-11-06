@@ -5,6 +5,8 @@ from constants import *
 from logger import log_state, log_event
 from player import *
 from asteroidfield import AsteroidField
+from score import Score
+from textengine import Text
 
 def main():
     pygame.init()
@@ -13,6 +15,9 @@ def main():
     print(f"Screen height: {SCREEN_HEIGHT}")
 
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    score = Score(20, 20)
+    current_score: int = 0
+
     clock = pygame.time.Clock()
     dt = 0.0
     
@@ -20,6 +25,7 @@ def main():
     drawable = pygame.sprite.Group()
     asteroids = pygame.sprite.Group() 
     shots = pygame.sprite.Group()
+    texts = pygame.sprite.Group() # maybe remove
     Player.containers = (updatable, drawable)
     Asteroid.containers = (updatable, drawable, asteroids)
     AsteroidField.containers = (updatable)
@@ -34,6 +40,7 @@ def main():
             if event.type == pygame.QUIT:
                     return
         screen.fill("black")
+        score.player_score(current_score, screen)
         for drawing in drawable:
             drawing.draw(screen)
         updatable.update(dt)
@@ -48,6 +55,7 @@ def main():
                     log_event("asteroid_shot")
                     shot.kill()
                     asteroid.split()
+                    current_score += (80 - asteroid.radius)
         pygame.display.flip()
         dt = clock.tick(60) / 1000
 
