@@ -9,7 +9,7 @@ class Asteroid(CircleShape):
         super().__init__(x, y, radius)
         self.rotation = 0
         self.rotation_speed = random.uniform(-20, 20)
-        self.sides = 10
+        self.sides = ASTEROID_SIDES
         self.modify = []
 
         for i in range(0, self.sides):
@@ -27,6 +27,7 @@ class Asteroid(CircleShape):
         self.rotation += self.rotation_speed * dt
 
     def draw(self, screen: pygame.Surface) -> None:
+        pygame.draw.polygon(screen, "black", self.polygon(), 0)
         pygame.draw.polygon(screen, "white", self.polygon(), LINE_WIDTH)
 
     def update(self, dt: float) -> None:
