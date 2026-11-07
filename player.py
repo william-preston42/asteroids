@@ -8,8 +8,6 @@ class Player(CircleShape):
         super().__init__(x, y, PLAYER_RADIUS)
         self.rotation = 0
         self.shoot_timer = 0
-        self.momentum = 0
-        self.momentum = max(0, self.momentum)
 
     def triangle(self) -> list[pygame.Vector2]:
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
@@ -40,21 +38,23 @@ class Player(CircleShape):
     def update(self, dt: float) -> None:
         keys = pygame.key.get_pressed()
 
-        if self.momentum > 0:
+        #if self.momentum > 0:
+        #    self.move(dt)
+        # if keys[pygame.K_w] and self.momentum <= MAX_PLAYER_SPEED:
+        #    self.momentum += PLAYER_ACCELERATION * dt
+        #elif self.momentum > 0 and not keys[pygame.K_w]:
+        #    self.momentum -= PLAYER_DECELERATION * dt
+        if keys[pygame.K_w]:
             self.move(dt)
-
-        if keys[pygame.K_w] and self.momentum <= MAX_PLAYER_SPEED:
-            self.momentum += PLAYER_ACCELERATION * dt
-        elif self.momentum > 0:
-            self.momentum -= PLAYER_DECELERATION * dt
-
-      #  if keys[pygame.K_s]:
-      #      self.move(-dt)
 
         if keys[pygame.K_a]:
             self.rotate(-dt)
         if keys[pygame.K_d]:
             self.rotate(dt)
+
+        if not keys[pygame.K_w]:
+            self.velocity -= (self.velocity / 80)
+        self.position += self.velocity
 
         self.shoot_timer -= dt
         if keys[pygame.K_SPACE]:
@@ -63,8 +63,11 @@ class Player(CircleShape):
     def move(self, dt: float) -> None:
         unit_vector = pygame.Vector2(0, 1)
         rotated_vector = unit_vector.rotate(self.rotation)
-        rotated_with_speed_vector = rotated_vector * self.momentum * dt
-        self.position += rotated_with_speed_vector
+        rotated_with_speed_vector = rotated_vector * 10 * dt
+        self.velocity += rotated_with_speed_vector
+
+        #rotated_with_speed_vector = rotated_vector * self.momentum * dt
+        #self.position += rotated_with_speed_vector
 
     def shoot(self) -> None:
         if self.shoot_timer > 0:
