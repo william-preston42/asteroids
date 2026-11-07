@@ -41,7 +41,6 @@ def main():
         screen.fill("black")
         for drawing in drawable:
             drawing.draw(screen)
-            player.draw_fire(screen)
         updatable.update(dt)
         for asteroid in asteroids:
             if asteroid.collides_with(player):

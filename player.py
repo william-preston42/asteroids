@@ -8,6 +8,8 @@ class Player(CircleShape):
         super().__init__(x, y, PLAYER_RADIUS)
         self.rotation = 0
         self.shoot_timer = 0
+        self.momentum = 0
+        self.momentum = max(0, self.momentum)
 
     def triangle(self) -> list[pygame.Vector2]:
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
@@ -29,8 +31,6 @@ class Player(CircleShape):
 
     def draw(self, screen: pygame.Surface) -> None:
         pygame.draw.polygon(screen, "white", self.triangle(), LINE_WIDTH)
-
-    def draw_fire(self, screen: pygame.Surface) -> None:
         if pygame.key.get_pressed()[pygame.K_w]:
             pygame.draw.polygon(screen, "white", self.triangle_fire(), LINE_WIDTH)
 
@@ -40,10 +40,16 @@ class Player(CircleShape):
     def update(self, dt: float) -> None:
         keys = pygame.key.get_pressed()
 
-        if keys[pygame.K_w]:
+        if self.momentum > 0:
             self.move(dt)
-        if keys[pygame.K_s]:
-            self.move(-dt)
+
+        if keys[pygame.K_w] and self.momentum <= MAX_PLAYER_SPEED:
+            self.momentum += PLAYER_ACCELERATION * dt
+        elif self.momentum > 0:
+            self.momentum -= PLAYER_DECELERATION * dt
+
+      #  if keys[pygame.K_s]:
+      #      self.move(-dt)
 
         if keys[pygame.K_a]:
             self.rotate(-dt)
@@ -57,7 +63,7 @@ class Player(CircleShape):
     def move(self, dt: float) -> None:
         unit_vector = pygame.Vector2(0, 1)
         rotated_vector = unit_vector.rotate(self.rotation)
-        rotated_with_speed_vector = rotated_vector * PLAYER_SPEED * dt
+        rotated_with_speed_vector = rotated_vector * self.momentum * dt
         self.position += rotated_with_speed_vector
 
     def shoot(self) -> None:
@@ -69,5 +75,3 @@ class Player(CircleShape):
         rotated_vector = unit_vector.rotate(self.rotation)
         rotated_with_speed_vector = rotated_vector * PLAYER_SHOOT_SPEED
         shot.velocity = rotated_with_speed_vector
-
-
