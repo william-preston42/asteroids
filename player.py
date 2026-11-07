@@ -38,12 +38,6 @@ class Player(CircleShape):
     def update(self, dt: float) -> None:
         keys = pygame.key.get_pressed()
 
-        #if self.momentum > 0:
-        #    self.move(dt)
-        # if keys[pygame.K_w] and self.momentum <= MAX_PLAYER_SPEED:
-        #    self.momentum += PLAYER_ACCELERATION * dt
-        #elif self.momentum > 0 and not keys[pygame.K_w]:
-        #    self.momentum -= PLAYER_DECELERATION * dt
         if keys[pygame.K_w]:
             self.move(dt)
 
@@ -53,8 +47,8 @@ class Player(CircleShape):
             self.rotate(dt)
 
         if not keys[pygame.K_w]:
-            self.velocity -= (self.velocity / 80)
-        self.position += self.velocity
+            self.velocity -= (self.velocity / 2) * dt
+        self.position += self.velocity * dt
 
         self.shoot_timer -= dt
         if keys[pygame.K_SPACE]:
@@ -63,11 +57,10 @@ class Player(CircleShape):
     def move(self, dt: float) -> None:
         unit_vector = pygame.Vector2(0, 1)
         rotated_vector = unit_vector.rotate(self.rotation)
-        rotated_with_speed_vector = rotated_vector * 10 * dt
+        rotated_with_speed_vector = rotated_vector * PLAYER_ACCELERATION * dt
         self.velocity += rotated_with_speed_vector
-
-        #rotated_with_speed_vector = rotated_vector * self.momentum * dt
-        #self.position += rotated_with_speed_vector
+        if self.velocity.length() != 0:
+            self.velocity.clamp_magnitude_ip(MAX_PLAYER_SPEED)
 
     def shoot(self) -> None:
         if self.shoot_timer > 0:
