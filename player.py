@@ -1,4 +1,5 @@
 import pygame
+import asteroid
 from circleshape import CircleShape
 from constants import *
 from shot import Shot
@@ -8,6 +9,7 @@ class Player(CircleShape):
         super().__init__(x, y, PLAYER_RADIUS)
         self.rotation = 0
         self.shoot_timer = 0
+        self.lives = 3
 
     def triangle(self) -> list[pygame.Vector2]:
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
@@ -40,7 +42,6 @@ class Player(CircleShape):
 
         if keys[pygame.K_w]:
             self.move(dt)
-
         if keys[pygame.K_a]:
             self.rotate(-dt)
         if keys[pygame.K_d]:
@@ -71,3 +72,9 @@ class Player(CircleShape):
         rotated_vector = unit_vector.rotate(self.rotation)
         rotated_with_speed_vector = rotated_vector * PLAYER_SHOOT_SPEED
         shot.velocity = rotated_with_speed_vector
+
+    def death(self) -> None:
+        self.lives -= 1
+        self.position = pygame.Vector2((SCREEN_WIDTH/2), (SCREEN_HEIGHT/2))
+        self.velocity = pygame.Vector2(0, 0)
+        self.rotation = 0
