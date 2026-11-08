@@ -56,13 +56,13 @@ class Player(CircleShape):
             self.shoot()
 
         if self.position.x < -SCREEN_WARP:
-            self.position.x = SCREEN_WIDTH
+            self.position.x = SCREEN_WIDTH + SCREEN_WARP
         if self.position.x > SCREEN_WIDTH + SCREEN_WARP:
-            self.position.x = 0
+            self.position.x = -SCREEN_WARP
         if self.position.y < -SCREEN_WARP:
-            self.position.y = SCREEN_HEIGHT
+            self.position.y = SCREEN_HEIGHT + SCREEN_WARP
         if self.position.y > SCREEN_HEIGHT + SCREEN_WARP:
-            self.position.y = 0
+            self.position.y = - SCREEN_WARP
 
     def move(self, dt: float) -> None:
         unit_vector = pygame.Vector2(0, 1)

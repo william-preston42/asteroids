@@ -35,10 +35,10 @@ class Asteroid(CircleShape):
         self.rotate(dt)
 
         if (
-            self.position.x < -SCREEN_WARP * 10
-            or self.position.x > SCREEN_WIDTH + SCREEN_WARP * 10
-            or self.position.y < -SCREEN_WARP * 10
-            or self.position.y > SCREEN_HEIGHT + SCREEN_WARP * 10
+            self.position.x < -SCREEN_WARP * 3
+            or self.position.x > SCREEN_WIDTH + SCREEN_WARP * 3
+            or self.position.y < -SCREEN_WARP * 3
+            or self.position.y > SCREEN_HEIGHT + SCREEN_WARP * 3
         ):
             self.kill()
 
