@@ -55,6 +55,15 @@ class Player(CircleShape):
         if keys[pygame.K_SPACE]:
             self.shoot()
 
+        if self.position.x < -SCREEN_WARP:
+            self.position.x = SCREEN_WIDTH
+        if self.position.x > SCREEN_WIDTH + SCREEN_WARP:
+            self.position.x = 0
+        if self.position.y < -SCREEN_WARP:
+            self.position.y = SCREEN_HEIGHT
+        if self.position.y > SCREEN_HEIGHT + SCREEN_WARP:
+            self.position.y = 0
+
     def move(self, dt: float) -> None:
         unit_vector = pygame.Vector2(0, 1)
         rotated_vector = unit_vector.rotate(self.rotation)

@@ -4,3 +4,5 @@ Own additions:
 - Scoring system
 - Proper asteroids (which spin)
 - Player momentum
+- Player lives
+- Screen wrap around
